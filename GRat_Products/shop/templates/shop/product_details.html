@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Product</title>
+</head>
+{% extends "shop/base.html" %}
+{% block content %}
+
+
+    <h2>Product</h2>
+<h3>{{product.name}}</h3>
+{% if product.image %}
+      <a href="#"><img class="card-img-top" src="{{product.image.url}}" alt=""></a>
+      {% else %}
+      <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+{% endif %}
+
+<h4 id="product_details">{{product.details|safe}}</h4>
+
+
+{% endblock content %}
+</html>

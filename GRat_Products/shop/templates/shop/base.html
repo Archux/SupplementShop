@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+    <title>Bulky</title>
+
+
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/shop-homepage.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      {% if user.is_authenticated %}
+      <h4>Welcome {{ user.username }}</h4>
+
+      {% else %}
+        <a class="navbar-brand" href="{% url 'login' %}">Hey there stranger!</a>
+      {% endif %}
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'home' %}">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'register' %}">Register</a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+              <form class="d-flex" method="get" action="{% url 'search_products' %}">
+                <input class="form-control me-2" type="text" placeholder="Search products" aria-label="Search" name="q">
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+              </form>
+          <div class="form-inline my-2 my-lg-0">
+              <a href="{% url 'cart' %}">
+                  <img id="cart-icon" src="{% static 'images/icons/cart.png' %}">
+              </a>
+              <p id="cart-total">{{ cartItems }}</p>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <div class="col-lg-3">
+
+        <div class="weather">
+          <h4><i class="fa fa-map-marker"></i> <span id="location"></span></h4>
+          <h6 id="weather"></h6>
+          <h5><span id="temp"></span> </h5>
+          <img src="" id="icon">
+        </div>
+
+<!--        <h1 class="my-4">BULKY</h1>-->
+        <div class="list-group">
+
+          <a name="categories" href="#" class="list-group-item">Top Products</a>
+          <a name="categories" href="{% url 'special_deals' %}" class="list-group-item">Special Deals</a>
+          <a name="categories" href="{% url 'protein_powders' %}" class="list-group-item">Protein Powders</a>
+          <a name="categories" href="{% url 'pre_workout' %}" class="list-group-item">Pre Workout</a>
+          <a name="categories" href="{% url 'creatine' %}" class="list-group-item">Creatine</a>
+          <a name="categories" href="{% url 'mass_gainers' %}" class="list-group-item">Mass Gainers</a>
+          <a name="categories" href="{% url 'bars_and_snacks' %}" class="list-group-item">Bars & Snacks</a>
+          <a name="categories" href="{% url 'vitamins' %}" class="list-group-item">Vitamins</a>
+
+          {% for choice in choices %}
+          <h1>{{ choices }}</h1>
+          {% endfor %}
+
+        </div>
+
+      </div>
+      <!-- /.col-lg-3 -->
+
+
+    {% block content %}{% endblock %}
+      <!-- /.col-lg-9 -->
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.container -->
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script>
+    function getWeather() {
+      $.ajax('http://ip-api.com/json')
+      .then(
+          function success(response) {
+              city = response.city;
+              link = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=6b435c3681d773804c955ff886487881`
+
+              var request = new XMLHttpRequest();
+              request.open('GET',link,true);
+              request.onload = function(){
+                var obj = JSON.parse(this.response);
+                console.log(obj);
+                document.getElementById('weather').innerHTML = obj.weather[0].description.toUpperCase();
+                document.getElementById('location').innerHTML = obj.name;
+                document.getElementById('temp').innerHTML = Math.floor(obj.main.temp);
+                document.getElementById('icon').src = "http://openweathermap.org/img/w/"+obj.weather[0].icon+".png";
+
+              }
+              request.send();
+          }
+      );
+    }
+
+    getWeather()
+
+  </script>
+
+</body>
+
+</html>
