@@ -7,12 +7,12 @@ from django.contrib.auth.models import User
 class Product(models.Model):
 
     CHOICES = [
-        ('PP', 'Protein Powder'),
-        ('PW', 'Pre Workout'),
-        ('CR', 'Creatine'),
-        ('MG', 'Mass Gainers'),
-        ('BS', 'Bars & Snacks'),
-        ('VI', 'Vitamins')
+        ('Protein Powder', 'Protein Powder'),
+        ('Pre Workout', 'Pre Workout'),
+        ('Creatine', 'Creatine'),
+        ('Mass Gainers', 'Mass Gainers'),
+        ('Bars Snacks', 'Bars & Snacks'),
+        ('Vitamins', 'Vitamins')
     ]
 
     name = models.CharField(max_length=200)
