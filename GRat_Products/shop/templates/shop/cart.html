@@ -37,9 +37,10 @@
                 <div style="flex:1"><strong>Quantity</strong></div>
                 <div style="flex:1"><strong>Total</strong></div>
             </div>
+        {% if order.complete == False %}
         {% for item in items %}
             <div class="cart-row">
-                <div style="flex:2"><img class="row-image" src="{{item.product.image_url}}"></div>
+                <div style="flex:2"><img class="row-image" src="{{item.product.image.url}}"></div>
                 <div style="flex:2">{{ item.product.name }}</div>
                 <div style="flex:1">{{ item.product.price|floatformat:2 }}€</div>
                 <div style="flex:1">
@@ -52,6 +53,7 @@
                 <div style="flex:1">{{ item.get_total }}€</div>
             </div>
         {% endfor %}
+        {% endif %}
         </div>
     </div>
 </div>

@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView
 from django.db.models import Q
 from .models import *
 from django.views import generic
+from django.contrib.auth.models import User
 
 
 class HomeView(ListView):
@@ -72,12 +73,9 @@ class VitaminsView(ListView):
 
 def cart(request):
 
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-    else:
-        items = []
-
-    context = {"items": items}
+    customer = request.user
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    items = order.orderitem_set.all()
+    context = {"items": items, "order": order}
     return render(request, 'shop/cart.html', context)
+

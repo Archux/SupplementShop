@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import Group
+from.models import Profile
 
 
 class RegistrationForm(UserCreationForm):
@@ -26,3 +28,16 @@ class RegistrationForm(UserCreationForm):
         self.fields['username'].widget.attrs['class'] = 'form-control'
         self.fields['password1'].widget.attrs['class'] = 'form-control'
         self.fields['password2'].widget.attrs['class'] = 'form-control'
+
+    def save(self, commit=True):
+        self.instance.is_active = True
+        saved_user = super().save(commit)
+        customer_group = Group.objects.get(name='Customers')
+        saved_user.groups.add(customer_group)
+        saved_user.save()
+
+        new_profile = Profile.objects.create(user=saved_user)
+
+        return saved_user
+
+
