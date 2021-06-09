@@ -7,6 +7,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
+  <script type="text/javascript">
+    var user = '{{request.user}}'
+
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+  </script>
 
     <title>Bulky</title>
 
@@ -133,33 +154,7 @@
   <!-- Bootstrap core JavaScript -->
   <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <script>
-    function getWeather() {
-      $.ajax('http://ip-api.com/json')
-      .then(
-          function success(response) {
-              city = response.city;
-              link = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=6b435c3681d773804c955ff886487881`
-
-              var request = new XMLHttpRequest();
-              request.open('GET',link,true);
-              request.onload = function(){
-                var obj = JSON.parse(this.response);
-                console.log(obj);
-                document.getElementById('weather').innerHTML = obj.weather[0].description.toUpperCase();
-                document.getElementById('location').innerHTML = obj.name;
-                document.getElementById('temp').innerHTML = Math.floor(obj.main.temp);
-                document.getElementById('icon').src = "http://openweathermap.org/img/w/"+obj.weather[0].icon+".png";
-
-              }
-              request.send();
-          }
-      );
-    }
-
-    getWeather()
-
-  </script>
+  <script type="text/javascript" src="{% static 'js/shop.js' %}"></script>
 
 </body>
 

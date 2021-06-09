@@ -7,8 +7,16 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ('category',)
 
 
+class OrderAdmin(admin.ModelAdmin):
+    list_filter = ('complete',)
+
+
+class OrderItemAdmin(admin.ModelAdmin):
+    list_filter = ('order',)
+
+
 admin.site.register(Product, ProductAdmin)
-admin.site.register(Order)
-admin.site.register(OrderItem)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderItem, OrderItemAdmin)
 admin.site.register(ShippingAddress)
 

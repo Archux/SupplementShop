@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
 from .models import *
+from django.http import JsonResponse
+import json
 from django.views import generic
 from django.contrib.auth.models import User
 
@@ -73,9 +75,40 @@ class VitaminsView(ListView):
 
 def cart(request):
 
-    customer = request.user
-    order, created = Order.objects.get_or_create(customer=customer, complete=False)
-    items = order.orderitem_set.all()
-    context = {"items": items, "order": order}
+    if request.user.is_authenticated:
+        customer = request.user
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+    else:
+        order = []
+        items = []
+        customer = []
+    context = {"items": items, "order": order, "customer": customer}
     return render(request, 'shop/cart.html', context)
+
+
+def update_item(request):
+    data = json.loads(request.body)
+    product_id = data['productId']
+    action = data['action']
+    print('Action:', action)
+    print('Product:', product_id)
+
+    customer = request.user
+    product = Product.objects.get(id=product_id)
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+
+    order_item, created = OrderItem.objects.get_or_create(order=order, product=product)
+
+    if action == 'add':
+        order_item.quantity = (order_item.quantity + 1)
+    elif action == 'remove':
+        order_item.quantity = (order_item.quantity - 1)
+
+    order_item.save()
+
+    if order_item.quantity <= 0:
+        order_item.delete()
+
+    return JsonResponse('Item was added', safe=False)
 
